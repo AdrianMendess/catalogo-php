@@ -15,6 +15,7 @@
                 <th>Nome</th>
                 <th>Preço</th>
                 <th>Quantidade</th>
+                <th>Descrição</th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +28,7 @@
                         <td><?= htmlspecialchars($p['nome']) ?></td>
                         <td>R$ <?= number_format($p['preco'], 2, ',', '.') ?></td>
                         <td><?= htmlspecialchars($p['quantidade']) ?></td>
+                        <td><?= htmlspecialchars($p['descricao']) ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>

@@ -15,7 +15,7 @@ class Connection
             $host = '127.0.0.1';
             $db   = 'catalogo_db';
             $user = 'root'; // seu usuário do banco
-            $pass = '12345678';     // sua senha do banco
+            $pass = 'adR123';     // sua senha do banco
 
             try {
                 self::$instance = new PDO(

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Product;
 use App\Repositories\ProductRepository;
 
 class ProductController
@@ -27,6 +28,7 @@ class ProductController
             $preco = filter_input(INPUT_POST, 'preco', FILTER_VALIDATE_FLOAT);
             $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_VALIDATE_INT);
 
+            
             if ($nome && $preco !== false) {
                 // Passando apenas os campos de texto e números
                 $this->repository->create([
@@ -36,7 +38,7 @@ class ProductController
                     'quantidade' => $quantidade ?? 0
                 ]);
 
-                header('Location: /index.php');
+                header('Location: index.php');
                 exit;
             }
         }

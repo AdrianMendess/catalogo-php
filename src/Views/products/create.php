@@ -13,6 +13,8 @@
         <input type="number" name="preco" step="0.01" required >
         <label>quantidade</label>
         <input type="number" name="quantidade" required>
+        <label>Descrição</label>
+        <input type="text" name="descricao" required> 
         <input type="submit" value="Criar">
     </form>
 </body>
