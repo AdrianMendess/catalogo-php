@@ -5,7 +5,7 @@
     <title>Catálogo de Produtos</title>
 </head>
 <body>
-    <p>Olá, <?=  $_SESSION['user_nome'] ?>.</p>
+
     <h1>Lista de Produtos</h1>
     <a href="index.php?action=create">Adicionar Novo Produto</a>
 

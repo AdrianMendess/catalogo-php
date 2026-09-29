@@ -1,5 +1,5 @@
 <?php
-/** @var App\Models\Product $produto */
+/** @var Array $produto */
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -10,22 +10,18 @@
 </head>
 <body>
     <form action="index.php?action=update" method="post">
-        <!-- Input oculto com o ID do produto para o UPDATE saber quem alterar -->
-        <input type="hidden" name="id" value="<?= htmlspecialchars($produto->getId()) ?>">
-
+        <form action="index.php?action=store" method="post">
+            <input type="hidden" name="id" value="<?= $produto[0]['id'] ?>">
         <label>Nome</label>
-        <input type="text" name="nome" value="<?= htmlspecialchars($produto->getNome()) ?>" required>
-
+        <input type="text" name="nome" required value="<?= $produto[0]["nome"] ?>">
         <label>Descrição</label>
-        <input type="text" name="descricao" value="<?= htmlspecialchars($produto->getDescricao()) ?>" required>
-
+        <input type="text" name="descricao" required  value="<?= $produto[0]["descricao"] ?>">
         <label>Preço</label>
-        <input type="number" name="preco" step="0.01" value="<?= htmlspecialchars($produto->getPreco()) ?>" required>
-
-        <label>Quantidade</label>
-        <input type="number" name="quantidade" value="<?= htmlspecialchars($produto->getQuantidade()) ?>" required>
-
-        <input type="submit" value="Salvar Alterações">
+        <input type="number" name="preco" step="0.01" required value="<?= $produto[0]["preco"] ?>">
+        <label>quantidade</label>
+        <input type="number" name="quantidade" required value="<?= $produto[0]["quantidade"] ?>">
+        <input type="submit" value="Editar">
+    </form>
     </form>
 </body>
 <style>
