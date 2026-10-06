@@ -16,6 +16,10 @@ switch ($action) {
     case 'store':
         $controller->store();
         break;
+    case 'delete':
+        $controller->destroy();
+        break;
+
     case 'index':
     default:
         $controller->index();

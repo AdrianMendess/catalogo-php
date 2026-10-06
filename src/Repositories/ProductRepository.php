@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Database\Connection;
+use App\Models\Product;
 use PDO;
 
 class ProductRepository
@@ -31,5 +32,14 @@ class ProductRepository
             ':preco'      => $data['preco'],
             ':quantidade' => $data['quantidade']
         ]);
+    }
+   
+    public function delete(int $id): bool{
+
+    $sql = "DELETE FROM produtos WHERE id = :id";
+    $stmt = $this->db->prepare($sql);
+
+    return $stmt->execute([':id' => $id]);
+
     }
 }

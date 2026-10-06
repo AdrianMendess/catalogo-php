@@ -38,9 +38,29 @@ class ProductController
                     'quantidade' => $quantidade ?? 0
                 ]);
 
+                
+
                 header('Location: index.php');
                 exit;
             }
+
         }
     }
+
+    public function destroy(): void {
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        if (!$id) {
+            header('Location: index.php?error=id_invalido');
+            exit;
+        }
+
+        $sucesso = $this->repository->delete($id);
+
+        if ($sucesso) {
+            header('Location: index.php?success=produto_deletado');
+        } else {
+            header('Location: index.php?error=falha_ao_deletar');
+        }
+}
+
 }

@@ -29,6 +29,7 @@
                         <td>R$ <?= number_format($p['preco'], 2, ',', '.') ?></td>
                         <td><?= htmlspecialchars($p['quantidade']) ?></td>
                         <td><?= htmlspecialchars($p['descricao']) ?></td>
+                        <td><a href="index.php?action=delete&id=<?=$p['id']; ?>" class="btn-excluir" onclick="return confirm('Tem certeza?')">Excluir</a></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
