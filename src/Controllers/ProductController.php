@@ -83,4 +83,7 @@ public function edit(): void{
     require __DIR__ . '/../Views/products/edit.php';
 }
 
+public function update(){
+    
+}
 }
