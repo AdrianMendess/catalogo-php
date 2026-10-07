@@ -11,7 +11,7 @@
         <input type="text" name="nome" required >
         <label>Preço</label>
         <input type="number" name="preco" step="0.01" required >
-        <label>quantidade</label>
+        <label>Quantidade</label>
         <input type="number" name="quantidade" required>
         <label>Descrição</label>
         <input type="text" name="descricao" required> 

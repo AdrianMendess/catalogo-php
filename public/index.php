@@ -13,13 +13,17 @@ switch ($action) {
     case 'create':
         require __DIR__ . '/../src/Views/products/create.php';
         break;
+    case 'edit':
+        $controller->edit();
+        break;
     case 'store':
         $controller->store();
         break;
     case 'delete':
         $controller->destroy();
         break;
-
+    case 'update':
+        $controller->update();
     case 'index':
     default:
         $controller->index();

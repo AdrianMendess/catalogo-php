@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Catálogo de Produtos</title>
 </head>
+
 <body>
     <h1>Lista de Produtos</h1>
     <a href="index.php?action=create">Adicionar Novo Produto</a>
@@ -20,7 +22,9 @@
         </thead>
         <tbody>
             <?php if (empty($produtos)): ?>
-                <tr><td colspan="4">Nenhum produto cadastrado.</td></tr>
+                <tr>
+                    <td colspan="4">Nenhum produto cadastrado.</td>
+                </tr>
             <?php else: ?>
                 <?php foreach ($produtos as $p): ?>
                     <tr>
@@ -29,11 +33,16 @@
                         <td>R$ <?= number_format($p['preco'], 2, ',', '.') ?></td>
                         <td><?= htmlspecialchars($p['quantidade']) ?></td>
                         <td><?= htmlspecialchars($p['descricao']) ?></td>
-                        <td><a href="index.php?action=delete&id=<?=$p['id']; ?>" class="btn-excluir" onclick="return confirm('Tem certeza?')">Excluir</a></td>
+                        <td>
+                            <a href="index.php?action=edit&id=<?= $p['id']; ?>" class="btn-editar">Editar</a>
+
+                            <a href="index.php?action=delete&id=<?= $p['id']; ?>" class="btn-excluir" onclick="return confirm('Tem certeza?')">Excluir</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
         </tbody>
     </table>
 </body>
+
 </html>

@@ -63,4 +63,24 @@ class ProductController
         }
 }
 
+public function edit(): void{
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+
+    if (!$id){
+        header('location: index.php');
+        exit;
+    }
+
+    $produto = $this->repository->findById($id);
+ 
+    if(!$produto){
+        header('Location: index.php?error=produto_nao_encontrado');
+        exit;
+    }
+
+    // incluindo a view para dar acesso a variavel produto.
+    require __DIR__ . '/../Views/products/edit.php';
+}
+
 }
