@@ -18,12 +18,13 @@
                 <th>Preço</th>
                 <th>Quantidade</th>
                 <th>Descrição</th>
+                <th colspan="2">Ações</th>
             </tr>
         </thead>
         <tbody>
             <?php if (empty($produtos)): ?>
                 <tr>
-                    <td colspan="4">Nenhum produto cadastrado.</td>
+                    <td colspan="7">Nenhum produto cadastrado.</td>
                 </tr>
             <?php else: ?>
                 <?php foreach ($produtos as $p): ?>
@@ -35,6 +36,9 @@
                         <td><?= htmlspecialchars($p['descricao']) ?></td>
                         <td>
                             <a href="index.php?action=edit&id=<?= $p['id']; ?>" class="btn-editar">Editar</a>
+
+                        </td>
+                        <td>
 
                             <a href="index.php?action=delete&id=<?= $p['id']; ?>" class="btn-excluir" onclick="return confirm('Tem certeza?')">Excluir</a>
                         </td>

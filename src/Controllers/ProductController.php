@@ -83,7 +83,37 @@ public function edit(): void{
     require __DIR__ . '/../Views/products/edit.php';
 }
 
-public function update(){
-    
+public function update(): void
+{
+
+    $id         = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $nome       = filter_input(INPUT_POST, 'nome', FILTER_UNSAFE_RAW);
+    $descricao  = filter_input(INPUT_POST, 'descricao', FILTER_UNSAFE_RAW);
+    $preco      = filter_input(INPUT_POST, 'preco', FILTER_VALIDATE_FLOAT);
+    $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_VALIDATE_INT);
+
+    // redireciona com erro caso algum seja invalido
+    if (!$id || !$nome || $preco === false || $quantidade === false) {
+        header('Location: index.php?error=dados_invalidos');
+        exit;
+    }
+    // organiza para enviar ao repository
+    $dados = [
+        'id'         => $id,
+        'nome'       => $nome,
+        'descricao'  => $descricao,
+        'preco'      => $preco,
+        'quantidade' => $quantidade
+    ];
+    // executa update no banco
+    $sucesso = $this->repository->update($dados);
+
+    if ($sucesso) {
+        header('Location: index.php?success=produto_atualizado');
+    } else {
+        header('Location: index.php?error=falha_ao_atualizar');
+    }
+    exit;
 }
+
 }
