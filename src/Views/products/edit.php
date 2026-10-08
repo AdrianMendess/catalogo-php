@@ -1,6 +1,5 @@
-<?php 
-/** @var array $produto
-*/ 
+<?php
+/** @var \App\Models\Product $produto */
 ?>
 
 <!DOCTYPE html>
@@ -12,23 +11,22 @@
 </head>
 <body>
     <form action="index.php?action=update" method="post">
-       
-        <input type="hidden" name="id" value="<?= $produto['id'] ?>">
+    <input type="hidden" name="id" value="<?= $produto->getId() ?>">
 
-        <label>Nome</label>
-        <input type="text" name="nome" value="<?= htmlspecialchars($produto['nome']) ?>" required>
+    <label>Nome</label>
+    <input type="text" name="nome" value="<?= htmlspecialchars($produto->getNome()) ?>" required>
 
-        <label>Preço</label>
-        <input type="number" name="preco" step="0.01" value="<?= $produto['preco'] ?>" required>
+    <label>Preço</label>
+    <input type="number" name="preco" step="0.01" value="<?= $produto->getPreco() ?>" required>
 
-        <label>Quantidade</label>
-        <input type="number" name="quantidade" value="<?= $produto['quantidade'] ?>" required>
+    <label>Quantidade</label>
+    <input type="number" name="quantidade" value="<?= $produto->getQuantidade() ?>" required>
 
-        <label>Descrição</label>
-        <input type="text" name="descricao" value="<?= htmlspecialchars($produto['descricao']) ?>" required> 
+    <label>Descrição</label>
+    <input type="text" name="descricao" value="<?= htmlspecialchars($produto->getDescricao()) ?>" required> 
 
-        <input type="submit" value="Salvar Alterações">
-    </form>
+    <input type="submit" value="Salvar Alterações">
+</form>
 </body>
 <style>
     body {

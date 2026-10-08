@@ -20,32 +20,28 @@ class ProductController
         require __DIR__ . '/../Views/products/index.php';
     }
 
-    public function store(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
-            $descricao = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_SPECIAL_CHARS);
-            $preco = filter_input(INPUT_POST, 'preco', FILTER_VALIDATE_FLOAT);
-            $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_VALIDATE_INT);
+   public function store(): void
+{
+    $nome       = filter_input(INPUT_POST, 'nome', FILTER_UNSAFE_RAW);
+    $descricao  = filter_input(INPUT_POST, 'descricao', FILTER_UNSAFE_RAW);
+    $preco      = filter_input(INPUT_POST, 'preco', FILTER_VALIDATE_FLOAT);
+    $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_VALIDATE_INT);
 
-            
-            if ($nome && $preco !== false) {
-                // Passando apenas os campos de texto e números
-                $this->repository->create([
-                    'nome' => $nome,
-                    'descricao' => $descricao,
-                    'preco' => $preco,
-                    'quantidade' => $quantidade ?? 0
-                ]);
-
-                
-
-                header('Location: index.php');
-                exit;
-            }
-
-        }
+    if (!$nome || $preco === false || $quantidade === false) {
+        header('Location: index.php?error=dados_invalidos');
+        exit;
     }
+
+    // Instancia o objeto Product
+    $produto = new Product(null, $nome, $descricao, $preco, $quantidade);
+
+    if ($this->repository->create($produto)) {
+        header('Location: index.php?success=produto_criado');
+    } else {
+        header('Location: index.php?error=falha_ao_criar');
+    }
+    exit;
+}
 
     public function destroy(): void {
         $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -85,30 +81,21 @@ public function edit(): void{
 
 public function update(): void
 {
-
     $id         = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
     $nome       = filter_input(INPUT_POST, 'nome', FILTER_UNSAFE_RAW);
     $descricao  = filter_input(INPUT_POST, 'descricao', FILTER_UNSAFE_RAW);
     $preco      = filter_input(INPUT_POST, 'preco', FILTER_VALIDATE_FLOAT);
     $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_VALIDATE_INT);
 
-    // redireciona com erro caso algum seja invalido
     if (!$id || !$nome || $preco === false || $quantidade === false) {
         header('Location: index.php?error=dados_invalidos');
         exit;
     }
-    // organiza para enviar ao repository
-    $dados = [
-        'id'         => $id,
-        'nome'       => $nome,
-        'descricao'  => $descricao,
-        'preco'      => $preco,
-        'quantidade' => $quantidade
-    ];
-    // executa update no banco
-    $sucesso = $this->repository->update($dados);
 
-    if ($sucesso) {
+    // Instancia o objeto Product preenchendo o ID
+    $produto = new Product($id, $nome, $descricao, $preco, $quantidade);
+
+    if ($this->repository->update($produto)) {
         header('Location: index.php?success=produto_atualizado');
     } else {
         header('Location: index.php?error=falha_ao_atualizar');

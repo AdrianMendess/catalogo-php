@@ -27,23 +27,19 @@
                     <td colspan="7">Nenhum produto cadastrado.</td>
                 </tr>
             <?php else: ?>
-                <?php foreach ($produtos as $p): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($p['id']) ?></td>
-                        <td><?= htmlspecialchars($p['nome']) ?></td>
-                        <td>R$ <?= number_format($p['preco'], 2, ',', '.') ?></td>
-                        <td><?= htmlspecialchars($p['quantidade']) ?></td>
-                        <td><?= htmlspecialchars($p['descricao']) ?></td>
-                        <td>
-                            <a href="index.php?action=edit&id=<?= $p['id']; ?>" class="btn-editar">Editar</a>
-
-                        </td>
-                        <td>
-
-                            <a href="index.php?action=delete&id=<?= $p['id']; ?>" class="btn-excluir" onclick="return confirm('Tem certeza?')">Excluir</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                <?php foreach ($produtos as $produto): ?>
+    <tr>
+        <td><?= $produto->getId() ?></td>
+        <td><?= htmlspecialchars($produto->getNome()) ?></td>
+        <td><?= htmlspecialchars($produto->getDescricao()) ?></td>
+        <td><?= $produto->getPrecoFormatado() ?></td>
+        <td><?= $produto->getQuantidade() ?></td>
+        <td>
+            <a href="index.php?action=edit&id=<?= $produto->getId() ?>">Editar</a>
+            <a href="index.php?action=delete&id=<?= $produto->getId() ?>">Excluir</a>
+        </td>
+    </tr>
+<?php endforeach; ?>
             <?php endif; ?>
         </tbody>
     </table>
