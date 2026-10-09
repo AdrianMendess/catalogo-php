@@ -96,4 +96,40 @@ class ProductRepository
             ':quantidade' => $product->getQuantidade()
         ]);
     }
+
+    // Retorna a lista de produtos filtrados e paginados
+public function findPaginated(string $search = '', int $limit = 5, int $offset = 0): array
+{
+    $sql = "SELECT * FROM produtos WHERE nome LIKE :search ORDER BY id DESC LIMIT :limit OFFSET :offset";
+    $stmt = $this->db->prepare($sql);
+    
+    // Bind explicito de inteiros para o LIMIT e OFFSET no PDO
+    $stmt->bindValue(':search', "%{$search}%", PDO::PARAM_STR);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    $linhas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return array_map(function ($dados) {
+        return new Product(
+            $dados['id'],
+            $dados['nome'],
+            $dados['descricao'],
+            (float) $dados['preco'],
+            (int) $dados['quantidade']
+        );
+    }, $linhas);
+}
+
+// Retorna o total de registos encontrados com o filtro atual
+public function count(string $search = ''): int
+{
+    $sql = "SELECT COUNT(*) FROM produtos WHERE nome LIKE :search";
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':search', "%{$search}%", PDO::PARAM_STR);
+    $stmt->execute();
+
+    return (int) $stmt->fetchColumn();
+}
 }

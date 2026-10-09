@@ -15,10 +15,19 @@ class ProductController
     }
 
     public function index(): void
-    {
-        $produtos = $this->repository->findAll();
-        require __DIR__ . '/../Views/products/index.php';
-    }
+{
+    $search = filter_input(INPUT_GET, 'search', FILTER_UNSAFE_RAW) ?? '';
+    $page = filter_input(INPUT_GET, 'page', FILTER_VALIDATE_INT) ?: 1;
+    
+    $limit = 5; // Quantidade de produtos por página
+    $offset = ($page - 1) * $limit;
+
+    $produtos = $this->repository->findPaginated($search, $limit, $offset);
+    $totalProdutos = $this->repository->count($search);
+    $totalPaginas = ceil($totalProdutos / $limit);
+
+    require __DIR__ . '/../Views/products/index.php';
+}
 
    public function store(): void
 {
