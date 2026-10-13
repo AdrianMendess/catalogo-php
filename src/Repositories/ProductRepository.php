@@ -127,8 +127,6 @@ class ProductRepository
             );
         }, $linhas);
     }
-
-    // Retorna o total de registros encontrados
     public function count(string $search = ''): int
     {
         if (empty($search)) {
