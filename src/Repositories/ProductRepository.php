@@ -42,7 +42,6 @@ class ProductRepository
             return null;
         }
 
-        // Instancia o objeto passando apenas os campos que o construtor espera
         return new Product(
             $dados['id'],
             $dados['nome'],
@@ -60,22 +59,20 @@ class ProductRepository
         $stmt = $this->db->prepare($sql);
 
         return $stmt->execute([
-            ':nome'       => $product->getNome(),
-            ':descricao'  => $product->getDescricao(),
-            ':preco'      => $product->getPreco(),
-            ':quantidade' => $product->getQuantidade()
+            ':nome'      => $product->getNome(),
+            ':descricao' => $product->getDescricao(),
+            ':preco'     => $product->getPreco(),
+            ':quantidade'=> $product->getQuantidade()
         ]);
     }
 
     public function delete(int $id): bool
     {
-
         $sql = "DELETE FROM produtos WHERE id = :id";
         $stmt = $this->db->prepare($sql);
 
         return $stmt->execute([':id' => $id]);
     }
-
 
     public function update(Product $product): bool
     {
@@ -97,39 +94,55 @@ class ProductRepository
         ]);
     }
 
-    // Retorna a lista de produtos filtrados e paginados
-public function findPaginated(string $search = '', int $limit = 5, int $offset = 0): array
-{
-    $sql = "SELECT * FROM produtos WHERE nome LIKE :search ORDER BY id DESC LIMIT :limit OFFSET :offset";
-    $stmt = $this->db->prepare($sql);
-    
-    // Bind explicito de inteiros para o LIMIT e OFFSET no PDO
-    $stmt->bindValue(':search', "%{$search}%", PDO::PARAM_STR);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-    
-    $stmt->execute();
-    $linhas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Retorna a lista de produtos filtrados com Full-Text Search
+    public function findPaginated(string $search = '', int $limit = 5, int $offset = 0): array
+    {
+        if (empty($search)) {
+            $sql = "SELECT * FROM produtos ORDER BY id DESC LIMIT :limit OFFSET :offset";
+            $stmt = $this->db->prepare($sql);
+        } else {
+            // Nota: Se o índice no MySQL for só em 'nome', mantenha MATCH(nome). 
+            // Se foi criado para (nome, descricao), deve usar MATCH(nome, descricao).
+            $sql = "SELECT * FROM produtos 
+                    WHERE MATCH(nome) AGAINST(:search IN BOOLEAN MODE) 
+                    ORDER BY id DESC 
+                    LIMIT :limit OFFSET :offset";
+            
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':search', $search . '*', PDO::PARAM_STR);
+        }
+        
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        
+        $stmt->execute();
+        $linhas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    return array_map(function ($dados) {
-        return new Product(
-            $dados['id'],
-            $dados['nome'],
-            $dados['descricao'],
-            (float) $dados['preco'],
-            (int) $dados['quantidade']
-        );
-    }, $linhas);
-}
+        return array_map(function ($dados) {
+            return new Product(
+                $dados['id'],
+                $dados['nome'],
+                $dados['descricao'],
+                (float) $dados['preco'],
+                (int) $dados['quantidade']
+            );
+        }, $linhas);
+    }
 
-// Retorna o total de registos encontrados com o filtro atual
-public function count(string $search = ''): int
-{
-    $sql = "SELECT COUNT(*) FROM produtos WHERE nome LIKE :search";
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindValue(':search', "%{$search}%", PDO::PARAM_STR);
-    $stmt->execute();
+    // Retorna o total de registros encontrados
+    public function count(string $search = ''): int
+    {
+        if (empty($search)) {
+            $sql = "SELECT COUNT(*) FROM produtos";
+            $stmt = $this->db->prepare($sql);
+        } else {
+            $sql = "SELECT COUNT(*) FROM produtos WHERE MATCH(nome) AGAINST(:search IN BOOLEAN MODE)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(':search', $search . '*', PDO::PARAM_STR);
+        }
 
-    return (int) $stmt->fetchColumn();
-}
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
 }
