@@ -101,8 +101,7 @@ class ProductRepository
             $sql = "SELECT * FROM produtos ORDER BY id DESC LIMIT :limit OFFSET :offset";
             $stmt = $this->db->prepare($sql);
         } else {
-            // Nota: Se o índice no MySQL for só em 'nome', mantenha MATCH(nome). 
-            // Se foi criado para (nome, descricao), deve usar MATCH(nome, descricao).
+            
             $sql = "SELECT * FROM produtos 
                     WHERE MATCH(nome) AGAINST(:search IN BOOLEAN MODE) 
                     ORDER BY id DESC 
@@ -145,4 +144,4 @@ class ProductRepository
 
         return (int) $stmt->fetchColumn();
     }
-}
+} 
